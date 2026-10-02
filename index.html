@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ManifestAI Engine PRO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+        input[type=range] { accent-color: #6366f1; }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-200 h-screen flex overflow-hidden selection:bg-indigo-500 selection:text-white">
+
+    <aside class="w-[400px] min-w-[400px] bg-slate-800 border-r border-slate-700 p-6 overflow-y-auto flex flex-col z-10 shadow-2xl">
+        <div class="flex items-center space-x-3 mb-6">
+            <div class="bg-gradient-to-br from-indigo-500 to-purple-600 p-2 rounded-lg shadow-lg">
+                <i class="fa-solid fa-bolt text-white text-xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">ManifestAI Engine</h1>
+        </div>
+
+        <div class="flex justify-between items-center mb-6 bg-slate-900 p-3 rounded-lg border border-slate-700">
+            <span class="text-xs text-slate-400 font-semibold uppercase"><i class="fa-solid fa-user-astronaut mr-1"></i> Profile</span>
+            <div>
+                <button type="button" onclick="loadPreferences()" class="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded text-white mr-1 transition">Load</button>
+                <button type="button" onclick="savePreferences()" class="text-xs bg-indigo-600 hover:bg-indigo-500 px-3 py-1.5 rounded text-white transition">Save Default</button>
+            </div>
+        </div>
+
+        <form id="ai-form" class="space-y-6">
+            <div class="space-y-4 bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest">1. Strategy & Goal</h2>
+                <select id="content_type" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2.5 text-sm outline-none" onchange="applySmartDefaults()">
+                    <option>LinkedIn Post</option><option>Professional Email</option><option>Ad Copy</option><option>Twitter Thread</option><option>Blog Post</option>
+                </select>
+                <select id="goal" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2.5 text-sm outline-none">
+                    <option>Sales/Conversion</option><option>Lead Generation</option><option>Brand Awareness</option><option>Thought Leadership</option><option>Engagement & Community</option><option>Educational / Value Add</option>
+                </select>
+                <input type="text" id="brand_name" placeholder="Brand Name (Optional)" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2.5 text-sm outline-none">
+            </div>
+
+            <div class="space-y-4 bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest">2. Audience & Voice</h2>
+                <select id="target_audience" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2.5 text-sm outline-none" onchange="toggleCustom('target_audience', 'custom_aud')">
+                    <option>Corporate Executives / B2B</option><option>Tech-Savvy Millennials</option><option>Gen Z Consumers</option>
+                    <option>Small Business Owners</option><option>Investors & VCs</option><option>Existing Customers</option><option>General Public</option><option>Other (Type Manual)</option>
+                </select>
+                <input type="text" id="custom_aud" placeholder="Type custom..." class="w-full bg-slate-900 border border-indigo-500 rounded-lg p-2.5 text-sm mt-2 hidden outline-none">
+
+                <select id="persona" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2.5 text-sm outline-none" onchange="toggleCustom('persona', 'custom_per')">
+                    <option>Industry Thought Leader</option><option>Sales Representative</option><option>Marketing Expert</option>
+                    <option>Corporate CEO</option><option>Software Engineer</option><option>Customer Support</option><option>Other (Type Manual)</option>
+                </select>
+                <input type="text" id="custom_per" placeholder="Type custom..." class="w-full bg-slate-900 border border-indigo-500 rounded-lg p-2.5 text-sm mt-2 hidden outline-none">
+
+                <select id="expertise" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2.5 text-sm outline-none">
+                    <option value="Beginner">Beginner</option><option value="Intermediate" selected>Intermediate</option><option value="Expert">Expert</option>
+                </select>
+            </div>
+
+            <div class="space-y-4 bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest">3. Tone & Format</h2>
+                <label class="block text-xs text-slate-400">Tone (Select Multiple)</label>
+                <div class="h-28 overflow-y-auto bg-slate-900 border border-slate-600 rounded-lg p-2 text-sm text-slate-300 space-y-1">
+                    <label class="flex items-center"><input type="checkbox" name="tone" value="Professional" class="mr-2" checked> Professional</label>
+                    <label class="flex items-center"><input type="checkbox" name="tone" value="Engaging" class="mr-2"> Engaging</label>
+                    <label class="flex items-center"><input type="checkbox" name="tone" value="Persuasive" class="mr-2"> Persuasive</label>
+                    <label class="flex items-center"><input type="checkbox" name="tone" value="Urgent" class="mr-2"> Urgent</label>
+                    <label class="flex items-center"><input type="checkbox" name="tone" value="Witty" class="mr-2"> Witty</label>
+                    <label class="flex items-center"><input type="checkbox" name="tone" value="Empathetic" class="mr-2"> Empathetic</label>
+                </div>
+                <input type="text" id="custom_tone" placeholder="Add custom tone..." class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-sm outline-none">
+
+                <select id="output_format" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2.5 text-sm outline-none">
+                    <option>Plain Text</option><option>Bullet Points</option><option>Markdown</option><option>Formal Letter</option><option>Numbered List</option>
+                </select>
+
+                <div class="grid grid-cols-3 gap-2">
+                    <select id="length" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-sm outline-none"><option>Short</option><option selected>Medium</option><option>Long</option></select>
+                    <select id="emojis" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-sm outline-none"><option>Yes</option><option>No</option></select>
+                    <select id="hashtags" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-sm outline-none"><option>Yes</option><option>No</option></select>
+                </div>
+
+                <select id="cta" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2.5 text-sm outline-none" onchange="toggleCustom('cta', 'custom_cta')">
+                    <option>None</option><option>Share your thoughts in the comments 👇</option><option>Reply to this email ✉️</option><option>Click the link to learn more 🔗</option><option>Book a Demo today 📅</option><option>Other (Type Manual)</option>
+                </select>
+                <input type="text" id="custom_cta" placeholder="Type custom CTA..." class="w-full bg-slate-900 border border-indigo-500 rounded-lg p-2.5 text-sm mt-2 hidden outline-none">
+            </div>
+
+            <div class="space-y-4 bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest">4. Constraints & Modes</h2>
+                <input type="text" id="keywords" placeholder="Keywords to Include" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2.5 text-sm outline-none">
+                <input type="text" id="words_to_avoid" placeholder="Words to Avoid" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2.5 text-sm outline-none text-red-400">
+                <div class="pt-2"><div class="flex justify-between"><label class="block text-xs text-slate-400 mb-1">Creativity</label><span id="creativity-val" class="text-xs text-indigo-400 font-mono">0.7</span></div><input type="range" id="creativity" min="0" max="1" step="0.1" value="0.7" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer" oninput="document.getElementById('creativity-val').innerText = this.value"></div>
+
+                <label class="flex items-center p-3 bg-indigo-900/40 border border-indigo-500/50 rounded-lg cursor-pointer">
+                    <input type="checkbox" id="compare_mode" class="mr-3 w-4 h-4 accent-indigo-500">
+                    <span class="text-sm font-semibold text-indigo-200">Generate 2 Variations (Compare)</span>
+                </label>
+
+                <label class="flex items-center p-3 bg-slate-900 border border-slate-600 rounded-lg cursor-pointer">
+                    <input type="checkbox" id="save_history_flag" class="mr-3 w-4 h-4 accent-emerald-500">
+                    <span class="text-sm font-semibold text-slate-300">💾 Log to Version History</span>
+                </label>
+            </div>
+
+            <button type="submit" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg transition transform hover:-translate-y-0.5 flex justify-center items-center text-lg">
+                <i class="fa-solid fa-sparkles mr-2"></i> Manifest Content
+            </button>
+        </form>
+    </aside>
+
+    <main class="flex-1 bg-slate-900 flex flex-col relative overflow-hidden">
+        <div class="bg-slate-800 border-b border-slate-700 p-4 flex gap-4">
+            <button onclick="switchTab('workspace')" id="tab-workspace" class="px-6 py-2 rounded-lg font-semibold bg-indigo-600 text-white shadow-lg transition"><i class="fa-solid fa-pen-nib mr-2"></i> Workspace</button>
+            <button onclick="switchTab('history')" id="tab-history" class="px-6 py-2 rounded-lg font-semibold text-slate-400 hover:bg-slate-700 hover:text-white transition"><i class="fa-solid fa-clock-rotate-left mr-2"></i> Content History</button>
+        </div>
+
+        <div id="view-workspace" class="flex-1 p-6 flex flex-col overflow-y-auto">
+            <textarea id="topic" rows="3" class="w-full bg-slate-800 border border-slate-600 rounded-xl p-4 text-white mb-4 outline-none resize-none shadow-lg" placeholder="Seed your idea or paste topic here... (Ctrl+Enter to Manifest)"></textarea>
+
+            <div class="grid grid-cols-4 gap-4 mb-4" id="nlp-dashboard">
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-xs text-slate-400 uppercase">Word Count</p><h3 id="m-words" class="text-xl font-bold text-indigo-400">-</h3></div>
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-xs text-slate-400 uppercase">Sentiment</p><h3 id="m-sent" class="text-xl font-bold text-emerald-400">-</h3></div>
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-xs text-slate-400 uppercase">Readability</p><h3 id="m-read" class="text-xl font-bold text-purple-400">-</h3></div>
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-xs text-slate-400 uppercase">Keywords Found</p><h3 id="m-kw" class="text-xl font-bold text-pink-400">-</h3></div>
+            </div>
+
+            <div class="flex-1 flex gap-4 relative">
+                <div id="loading" class="absolute inset-0 glass-panel flex flex-col items-center justify-center hidden rounded-xl z-20">
+                    <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                    <p class="mt-4 text-indigo-300 font-bold tracking-widest text-sm animate-pulse">MANIFESTING...</p>
+                </div>
+
+                <div class="flex-1 bg-slate-800 border border-slate-700 rounded-xl flex flex-col shadow-xl">
+                    <div class="bg-slate-800/80 border-b border-slate-700 p-3 flex justify-between items-center rounded-t-xl">
+                        <span class="font-bold text-slate-200 text-sm">Variation 1 <span id="badge-engine" class="ml-2 px-2 py-0.5 bg-indigo-500/20 text-indigo-300 text-xs rounded hidden"></span></span>
+                        <span id="badge-status-1" class="px-2 py-0.5 text-xs rounded hidden"></span>
+                    </div>
+                    <textarea id="output-text-1" readonly class="flex-1 w-full p-4 bg-transparent outline-none resize-none text-slate-300"></textarea>
+                    <div class="border-t border-slate-700 p-2 flex justify-end gap-2 bg-slate-800/80 rounded-b-xl">
+                        <button onclick="downloadText('output-text-1')" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded text-xs font-bold text-slate-200"><i class="fa-solid fa-download mr-1"></i> Download</button>
+                        <button onclick="copyText('output-text-1')" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded text-xs font-bold text-slate-200"><i class="fa-solid fa-copy mr-1"></i> Copy</button>
+                    </div>
+                </div>
+
+                <div id="panel-2" class="flex-1 bg-slate-800 border border-slate-700 rounded-xl flex flex-col shadow-xl hidden">
+                    <div class="bg-slate-800/80 border-b border-slate-700 p-3 flex justify-between items-center rounded-t-xl">
+                        <span class="font-bold text-slate-200 text-sm">Variation 2 <span class="ml-2 px-2 py-0.5 bg-purple-500/20 text-purple-300 text-xs rounded">+ Creativity</span></span>
+                        <span id="badge-status-2" class="px-2 py-0.5 text-xs rounded hidden"></span>
+                    </div>
+                    <textarea id="output-text-2" readonly class="flex-1 w-full p-4 bg-transparent outline-none resize-none text-slate-300"></textarea>
+                    <div class="border-t border-slate-700 p-2 flex justify-end gap-2 bg-slate-800/80 rounded-b-xl">
+                        <button onclick="downloadText('output-text-2')" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded text-xs font-bold text-slate-200"><i class="fa-solid fa-download mr-1"></i> Download</button>
+                        <button onclick="copyText('output-text-2')" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded text-xs font-bold text-slate-200"><i class="fa-solid fa-copy mr-1"></i> Copy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-history" class="flex-1 p-8 hidden overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Content History</h2>
+                <div class="flex gap-3">
+                    <button onclick="clearHistory()" class="bg-red-600/80 hover:bg-red-500 text-white px-4 py-2 rounded text-sm font-bold transition"><i class="fa-solid fa-trash mr-2"></i> Clear History</button>
+                    <button onclick="exportCSV()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded text-sm font-bold transition"><i class="fa-solid fa-file-csv mr-2"></i> Export to CSV</button>
+                </div>
+            </div>
+            <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+                <table class="w-full text-left text-sm"><thead class="bg-slate-900 text-slate-400"><tr><th class="p-4">Date</th><th class="p-4">Type</th><th class="p-4">Topic Snippet</th><th class="p-4">Engine</th><th class="p-4">Action</th></tr></thead>
+                <tbody id="history-table" class="divide-y divide-slate-700"></tbody></table>
+            </div>
+        </div>
+    </main>
+    <div id="toast" class="fixed bottom-5 right-5 bg-emerald-500 text-white px-6 py-3 rounded-lg shadow-lg font-semibold transform translate-y-20 opacity-0 transition-all duration-300"><i class="fa-solid fa-check-circle mr-2"></i> Action Successful!</div>
+
+    <script>
+
+        const API_BASE_URL = import.meta.env ? (import.meta.env.VITE_API_BASE_URL || 'https://manifestai.onrender.com') : 'https://manifestai.onrender.com';
+
+        function savePreferences() {
+            const prefs = { brand: document.getElementById('brand_name').value, audience: document.getElementById('target_audience').value, persona: document.getElementById('persona').value };
+            localStorage.setItem('manifest_prefs', JSON.stringify(prefs)); showToast("Default Profile Saved!");
+        }
+        function loadPreferences() {
+            const prefs = JSON.parse(localStorage.getItem('manifest_prefs'));
+            if(prefs) {
+                if(prefs.brand) document.getElementById('brand_name').value = prefs.brand;
+                try { document.getElementById('target_audience').value = prefs.audience; document.getElementById('persona').value = prefs.persona; } catch(e){}
+            }
+        }
+
+        function switchTab(tab) {
+            document.getElementById('view-workspace').classList.toggle('hidden', tab !== 'workspace');
+            document.getElementById('view-history').classList.toggle('hidden', tab !== 'history');
+            document.getElementById('tab-workspace').className = tab === 'workspace' ? 'px-6 py-2 rounded-lg font-semibold bg-indigo-600 text-white shadow-lg' : 'px-6 py-2 rounded-lg font-semibold text-slate-400 hover:bg-slate-700 hover:text-white';
+            document.getElementById('tab-history').className = tab === 'history' ? 'px-6 py-2 rounded-lg font-semibold bg-indigo-600 text-white shadow-lg' : 'px-6 py-2 rounded-lg font-semibold text-slate-400 hover:bg-slate-700 hover:text-white';
+            if(tab === 'history') loadHistoryData();
+        }
+
+        function toggleCustom(selectId, inputId) {
+            const select = document.getElementById(selectId);
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            input.classList.toggle('hidden', select.value !== 'Other (Type Manual)');
+        }
+
+        function applySmartDefaults() {
+            const type = document.getElementById('content_type').value;
+            const setVal = (id, val) => { const elem = document.getElementById(id); if (elem) { elem.value = val; toggleCustom(id, 'custom_' + (id==='target_audience'?'aud':id==='persona'?'per':id)); } };
+            const checkTone = (val) => {
+                document.querySelectorAll('input[name="tone"]').forEach(cb => cb.checked = false);
+                const cb = document.querySelector(`input[name="tone"][value="${val}"]`);
+                if(cb) cb.checked = true;
+            };
+
+            if(type === 'LinkedIn Post') {
+                setVal('target_audience', 'Corporate Executives / B2B'); setVal('persona', 'Industry Thought Leader'); setVal('goal', 'Thought Leadership'); checkTone('Engaging'); setVal('output_format', 'Bullet Points'); setVal('emojis', 'Yes'); setVal('hashtags', 'Yes'); setVal('length', 'Medium'); setVal('cta', 'Share your thoughts in the comments 👇');
+            } else if (type === 'Professional Email') {
+                setVal('target_audience', 'Existing Customers'); setVal('persona', 'Sales Representative'); setVal('goal', 'Lead Generation'); checkTone('Professional'); setVal('output_format', 'Formal Letter'); setVal('emojis', 'No'); setVal('hashtags', 'No'); setVal('length', 'Medium'); setVal('cta', 'Reply to this email ✉️');
+            } else if (type === 'Ad Copy') {
+                setVal('target_audience', 'Gen Z Consumers'); setVal('persona', 'Marketing Expert'); setVal('goal', 'Sales/Conversion'); checkTone('Persuasive'); setVal('output_format', 'Plain Text'); setVal('emojis', 'Yes'); setVal('hashtags', 'No'); setVal('length', 'Short'); setVal('cta', 'Click the link to learn more 🔗');
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerHTML = `<i class="fa-solid fa-check-circle mr-2"></i> ${msg}`;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 2500);
+        }
+
+        function copyText(id) { const txt = document.getElementById(id); if(!txt.value) return; txt.select(); document.execCommand('copy'); showToast("Copied to clipboard!"); }
+        function downloadText(id) {
+            const text = document.getElementById(id).value;
+            if(!text) return;
+            const a = document.createElement('a'); a.href = window.URL.createObjectURL(new Blob([text], {type: 'text/plain'}));
+            a.download = 'ManifestAI_Content.txt'; a.click(); showToast("Downloaded successfully!");
+        }
+
+        document.getElementById('topic').addEventListener('keydown', function(e) { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') document.getElementById('ai-form').dispatchEvent(new Event('submit')); });
+
+        document.getElementById('ai-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const topic = document.getElementById('topic').value;
+            if (!topic) return alert("Please enter a topic first!");
+
+            document.getElementById('loading').classList.remove('hidden');
+
+            let tones = Array.from(document.querySelectorAll('input[name="tone"]:checked')).map(cb => cb.value);
+            const customTone = document.getElementById('custom_tone').value;
+            if(customTone) tones.push(customTone);
+            const finalTones = tones.join(", ") || "Professional";
+
+            const getFinal = (sel, cst) => { const el = document.getElementById(sel); const cstEl = document.getElementById(cst); return (el && el.value === 'Other (Type Manual)' && cstEl) ? cstEl.value : (el ? el.value : ""); };
+
+            const isCompare = document.getElementById('compare_mode').checked;
+            if(isCompare) { document.getElementById('panel-2').classList.remove('hidden'); } else { document.getElementById('panel-2').classList.add('hidden'); }
+
+            const reqData = {
+                topic: topic, brand_name: document.getElementById('brand_name').value || "Generic Brand",
+                goal: document.getElementById('goal').value, target_audience: getFinal('target_audience', 'custom_aud'),
+                persona: getFinal('persona', 'custom_per'), expertise: document.getElementById('expertise').value,
+                content_type: document.getElementById('content_type').value, tone: finalTones,
+                length: document.getElementById('length').value, output_format: document.getElementById('output_format').value,
+                keywords: document.getElementById('keywords').value || "None", words_to_avoid: document.getElementById('words_to_avoid').value || "None",
+                emojis: document.getElementById('emojis').value, hashtags: document.getElementById('hashtags').value,
+                cta: getFinal('cta', 'custom_cta'), creativity: parseFloat(document.getElementById('creativity').value),
+                variations: isCompare ? 2 : 1,
+                save_history: document.getElementById('save_history_flag').checked
+            };
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/generate`, {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify(reqData)
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    document.getElementById('output-text-1').value = data.outputs[0];
+                    if(isCompare && data.outputs[1]) document.getElementById('output-text-2').value = data.outputs[1];
+
+                    const bEngine = document.getElementById('badge-engine');
+                    bEngine.innerHTML = `✨ ${data.engine}`; bEngine.classList.remove('hidden');
+
+                    const stat1 = document.getElementById('badge-status-1');
+                    stat1.innerHTML = data.statuses[0].includes('Fixed') ? `⚠️ ${data.statuses[0]}` : `✅ ${data.statuses[0]}`;
+                    stat1.className = data.statuses[0].includes('Fixed') ? "px-2 py-0.5 bg-yellow-500/20 text-yellow-300 text-xs rounded" : "px-2 py-0.5 bg-emerald-500/20 text-emerald-300 text-xs rounded";
+                    stat1.classList.remove('hidden');
+
+                    if(isCompare && data.statuses[1]){
+                        const stat2 = document.getElementById('badge-status-2');
+                        stat2.innerHTML = data.statuses[1].includes('Fixed') ? `⚠️ ${data.statuses[1]}` : `✅ ${data.statuses[1]}`;
+                        stat2.className = data.statuses[1].includes('Fixed') ? "px-2 py-0.5 bg-yellow-500/20 text-yellow-300 text-xs rounded" : "px-2 py-0.5 bg-emerald-500/20 text-emerald-300 text-xs rounded";
+                        stat2.classList.remove('hidden');
+                    }
+
+                    document.getElementById('m-words').innerText = data.metrics[0].word_count;
+                    document.getElementById('m-sent').innerText = data.metrics[0].sentiment;
+                    document.getElementById('m-read').innerText = data.metrics[0].readability;
+                    document.getElementById('m-kw').innerText = data.metrics[0].keywords_found;
+
+                    if(reqData.save_history) showToast("Saved to History!");
+                } else { document.getElementById('output-text-1').value = `Server Error: ${data.detail}`; }
+            } catch (error) { document.getElementById('output-text-1').value = "Network Error: Is FastAPI running?"; }
+            finally { document.getElementById('loading').classList.add('hidden'); }
+        });
+
+        let historyData = [];
+        async function loadHistoryData() {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/history`);
+                historyData = await res.json();
+                document.getElementById('history-table').innerHTML = historyData.map((h, i) => `
+                    <tr class="hover:bg-slate-700/50">
+                        <td class="p-4 text-xs text-slate-400">${h.timestamp}</td>
+                        <td class="p-4"><span class="bg-indigo-500/20 text-indigo-300 px-2 py-1 rounded text-xs">${h.type}</span></td>
+                        <td class="p-4 truncate max-w-[200px]">${h.topic}</td><td class="p-4 text-xs">${h.engine}</td>
+                        <td class="p-4"><button onclick="viewHistory(${i})" class="text-indigo-400 hover:text-white">View</button></td>
+                    </tr>
+                `).join('');
+            } catch(e) {}
+        }
+        function viewHistory(idx) {
+            document.getElementById('output-text-1').value = historyData[idx].output;
+            document.getElementById('topic').value = historyData[idx].topic;
+            document.getElementById('compare_mode').checked = false;
+            document.getElementById('panel-2').classList.add('hidden');
+            switchTab('workspace');
+        }
+
+        // NEW: Clear History Function
+        async function clearHistory() {
+            if(!confirm("Are you sure you want to delete all version history?")) return;
+            try {
+                await fetch(`${API_BASE_URL}/api/history`, { method: 'DELETE' });
+                historyData = [];
+                document.getElementById('history-table').innerHTML = '';
+                showToast("History Cleared!");
+            } catch(e) { alert("Failed to clear history."); }
+        }
+
+        function exportCSV() {
+            if(!historyData.length) return alert("No history to export.");
+            let csv = 'Timestamp,Type,Engine,Topic\n' + historyData.map(h => `"${h.timestamp}","${h.type}","${h.engine}","${h.topic.replace(/"/g, '""')}"`).join('\n');
+            const a = document.createElement('a'); a.href = window.URL.createObjectURL(new Blob([csv], {type: 'text/csv'}));
+            a.download = 'ManifestAI_History.csv'; a.click();
+        }
+
+        applySmartDefaults(); loadPreferences();
+    </script>
+</body>
+</html>

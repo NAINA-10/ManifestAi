@@ -1,0 +1,45 @@
+1st day kick off call: introductory session all the interns introduced themselves, what they are pursuing, what are there interests and strong points, if they have done any internship or not 
+
+day 2 had a chat on ai tools what ai tools are us interns using and for what purpose a story about small startups
+then discussed about the project query descriptively
+title: Developing an AI System for Personalized Content Creation in Media
+
+day 3 discussed modules and what exactly it is going to cover in every milestone in detail, flow chart of the project told us to present a ppt about llm basic idea about it and why we need it for our project and how are we going to implement it in our project tomorrow
+expectations:1) Be regular and punctual 
+2) Asks questions freely
+3) help each other(makes your leadership qualities better)
+4)You are responsible for your output( the deliverables should be delivered by the end of the timeline)
+5) Don't be very much comfortable think like a corporate employee and not like a student with procrastination mindset 
+6) Don't be stuck on a problem alone for hours or days take help from your mentor or teammates (communication helps avoiding delays)
+7) Make a personal schedule for the learning and implementation so that u don't have to make excuses in the end
+
+day 4  understand different content types & models and try to write different prompts for each content and document every input and response against different models of everything get multiple examples and be ready to present what u've explored and done and what u r going to do next 
+
+day 5 ppt presentation by team 1 and team 2 ppt on RAG real life example of RAG, ppt on llm (our ppt)
+
+day 6 ppt presentation by a team on llm, discussed which llms everybody has explored, basically updates on what everybody has done in the past 2 days, also mentor said that we are going to use multiple llms in our project to avoid downtime
+
+day 7 ppt presentation, updates on project by interns, discussion on which llms should be used priority wise, gemini, chatgpt, claude, perplexity, grok and hugging faces in the least priority
+
+day 8- ppt presentation, discussion on setups and updates on the project, discussion on submission of tasks of milestone 1 documentations also discussion on limits of the models we're going to use
+
+day 9- screen sharing on the updates what everybody has done till now their codes, asked us to fine tune models with content-types, tone etc, also ma'am asked everybody to focus on LinkedIn posts, professional emails, promotional ads we'll stick for these three and not on tweets and all, asked to try different prompts to use on the model so that we can pick the best model and best prompts, structure of prompts: task, tone, formats and constraints, our focus is on tone structure, prompt structure, content types, format structure
+
+day 10- discussion on the milestone 1 deliverables submitted by interns, we need to test & evaluate - tone selection, content length, temperature setting, re-write prompt of users, content types, roles, formatting options like table, pointers, etc , best prompt structure, takes user input -> provides dynamic output, jinja format make input parameters structure a little advanced 
+
+
+day 11- discussion on milestone 2 daily basis tasks using detailed document, asked to form grps to test different models, parameter performance, reponse quality
+
+day 12-hashtags, actions like hurry up, scan for more, etc for ads, emojis, give drop downs as much in tone 
+
+create branch name as your full name and not main and master 
+
+2023016401486963
+
+project objective 
+key features
+technology stack-dont mention ides like vs code, etc, u can mention python, react, database, etc
+diagram showcasing project flow
+feature enhancements
+conclusions
+
